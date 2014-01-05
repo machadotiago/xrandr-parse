@@ -8,6 +8,7 @@ module.exports = function (src) {
     var lines = src.split('\n');
     var query = {};
     var last = null;
+    var index = 0;
     
     lines.forEach(function (line) {
         var m;
@@ -16,14 +17,16 @@ module.exports = function (src) {
                 connected: true,
                 width: parseInt(m[2]),
                 height: parseInt(m[3]),
-                modes: []
+                modes: [],
+                index: index++
             };
             last = m[1];
         }
         else if (m = re.disconnected.exec(line)) {
             query[m[1]] = {
                 connected: false,
-                modes: []
+                modes: [],
+                index: index++
             };
             last = m[1];
         }

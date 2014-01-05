@@ -87,6 +87,7 @@ and the parsed query was:
         "rate": 60
       }
     ],
+    "index": 0,
     "native": {
       "width": "1366",
       "height": "768",
@@ -100,11 +101,13 @@ and the parsed query was:
   },
   "DFP1": {
     "connected": false,
-    "modes": []
+    "modes": [],
+    "index": 1
   },
   "CRT1": {
     "connected": false,
-    "modes": []
+    "modes": [],
+    "index": 2
   }
 }
 ```
