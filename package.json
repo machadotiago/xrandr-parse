@@ -1,6 +1,6 @@
 {
   "name": "xrandr-parse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "parse the output of the `xrandr` command",
   "main": "index.js",
   "repository": {

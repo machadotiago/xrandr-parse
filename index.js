@@ -1,5 +1,5 @@
 var re = {
-    connected: /^(\S+) connected (\d+)x(\d+)/,
+    connected: /^(\S+) connected (?:(\d+)x(\d+))?/,
     disconnected: /^(\S+) disconnected/,
     mode: /^\s+(\d+)x(\d+)\s+((?:\d+\.)?\d+)([* ]?)([+ ]?)/
 };
@@ -15,11 +15,13 @@ module.exports = function (src) {
         if (m = re.connected.exec(line)) {
             query[m[1]] = {
                 connected: true,
-                width: parseInt(m[2]),
-                height: parseInt(m[3]),
                 modes: [],
                 index: index++
             };
+            if (m[2] && m[3]) {
+                query[m[1]].width = parseInt(m[2]);
+                query[m[1]].height = parseInt(m[3]);
+            }
             last = m[1];
         }
         else if (m = re.disconnected.exec(line)) {
