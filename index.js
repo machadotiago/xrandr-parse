@@ -1,7 +1,7 @@
 var re = {
     connected: /^(\S+) connected (?:(\d+)x(\d+))?/,
     disconnected: /^(\S+) disconnected/,
-    mode: /^\s+(\d+)x(\d+)\s+((?:\d+\.)?\d+)([* ]?)([+ ]?)/
+    mode: /^\s+(\d+)x([0-9i]+)\s+((?:\d+\.)?\d+)([* ]?)([+ ]?)/
 };
 
 module.exports = function (src) {
