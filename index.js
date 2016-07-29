@@ -40,8 +40,8 @@ module.exports = function (src) {
             };
             query[last].modes.push(r);
             
-            if (m[4] === '*') query[last]['native'] = r;
-            if (m[5] === '+') query[last].current = r;
+            if (m[4] === '+') query[last]['native'] = r;
+            if (m[5] === '*') query[last].current = r;
         }
         else {
             last = null;
