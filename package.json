@@ -1,23 +1,24 @@
 {
-  "name": "xrandr-parse",
+  "name": "xrandr-verbose-parse",
   "version": "1.0.0",
-  "description": "parse the output of the `xrandr` command",
+  "description": "Parse the output of the `xrandr --verbose` command",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/substack/xrandr-parse.git"
+    "url": "git://github.com/machadotiago/xrandr-verbose-parse"
   },
-  "homepage": "https://github.com/substack/xrandr-parse",
+  "homepage": "//github.com/machadotiago/xrandr-verbose-parse",
   "keywords": [
     "xrandr",
+    "verbose",
     "parse",
     "linux",
     "x11"
   ],
   "author": {
-    "name": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net"
+    "name": "Tiago Machado",
+    "email": "tiago.machado@netsmarttech.com",
+    "url": "netsmarttech.com"
   },
   "license": "MIT"
 }
