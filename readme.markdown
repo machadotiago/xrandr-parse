@@ -2,7 +2,7 @@
 
 parse the output of the `xrandr --verbose` command
 
-This module was based on [lionep](https://github.com/lionep) xrandr [paser](https://github.com/lionep/xrandr-parse)
+This module was based on [substack's](https://github.com/substack) xrandr [parser](https://github.com/substack/xrandr-parse)
 
 # example
 
