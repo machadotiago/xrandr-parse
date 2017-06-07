@@ -1,4 +1,4 @@
-# xrandr-parse
+# xrandr-verbose-parse
 
 parse the output of the `xrandr --verbose` command
 
