@@ -1,9 +1,9 @@
 var type = {
-    connected: /^(\S+) connected (?:(\d+)x(\d+)\+(\d+)\+(\d))?\s+(\([0-9x]+\))\s+(\w+)/,
+    connected: /^(\S+) connected (?:(\d+)x(\d+)\+(\d+)\+(\d))*\s*(\(\w+\))*\s*(\w*)/,
     disconnected: /^(\S+) disconnected/,
-    mode: /^\s+(\d+)x([0-9i]+)\s+(\(\w+\))\s+([0-9]+\.[0-9]+)MHz\s+((\s*[\+]*[\-]*\w*\s)*)((\*current)*)\s*((\+preferred)*)/,
-    dimension_horizontal: /^\s+(h\:)\s+(width)\s+(\d+)\s+(start)\s+(\d+)\s+(end)\s+(\d+)\s+(total)\s+(\d+)/,
-    dimension_vertical: /^\s+(v\:)\s+(height)\s+(\d+)\s+(start)\s+(\d+)\s+(end)\s+(\d+)\s+(total)\s+(\d+)/
+    mode: /^\s+(\d+)x([0-9i]+)\s+(\(\w+\))\s+([0-9]+\.[0-9]+)MHz\s+((\s*[\+]*[\-]*\w*\s)*)/,
+    dimension_horizontal: /^\s+h\:\s+width\s+(\d+)\s+start\s+(\d+)\s+end\s+(\d+)\s+total\s+(\d+)\s*skew\s*(\w)\s*clock\s*([0-9]*.[0-9]*)/,
+    dimension_vertical: /^\s+v\:\s+height\s+(\d+)\s+start\s+(\d+)\s+end\s+(\d+)\s+total\s+(\d+)\s*clock\s*([0-9]*.[0-9]*)/
 };
 
 
@@ -42,68 +42,85 @@ module.exports = function (data) {
     var index = 0;
 
     lines.forEach(function (line) {
-        var tmp;
-        if ((tmp = type.connected.exec(line))) {
+            var tmp;
+            if ((tmp = type.connected.exec(line))) {
+                if (tmp[3] !== undefined) {
+                    result[tmp[1]] = {
+                        connected: true,
+                        orientation: tmp[7],
+                        modes: [],
+                        index: index++
+                    };
+                    if (tmp[2] && tmp[3]) {
+                        result[tmp[1]].width = parseInt(tmp[2]);
+                        result[tmp[1]].height = parseInt(tmp[3]);
+                    }
+                    if (tmp[4] && tmp[5]) {
+                        result[tmp[1]].left = parseInt(tmp[4]);
+                        result[tmp[1]].top = parseInt(tmp[5]);
+                    }
+                    last_connection = tmp[1];
+                } else {
+                    result[tmp[1]] = {
+                        connected: false,
+                        orientation: null,
+                        modes: [],
+                        index: index++,
+                        width: 0,
+                        height: 0,
+                        top: 0,
+                        left: 0
+                    };
+                    last_connection = tmp[1];
 
-            result[tmp[1]] = {
-                connected: true,
-                orientation: tmp[7],
-                modes: [],
-                index: index++
-            };
-            if (tmp[2] && tmp[3]) {
-                result[tmp[1]].width = parseInt(tmp[2]);
-                result[tmp[1]].height = parseInt(tmp[3]);
+                }
+
+            } else if ((tmp = type.disconnected.exec(line))) {
+                result[tmp[1]] = {
+                    connected: false,
+                    modes: [],
+                    index: index++
+                };
+                last_connection = tmp[1];
+            } else if ((tmp = type.mode.exec(line))) {
+                var dimensions = {
+                    vertical: null,
+                    horizontal: null
+                };
+                var r = {
+                    name: tmp[1] + 'x' + tmp[2],
+                    width: tmp[1],
+                    height: tmp[2],
+                    rate: parseFloat(tmp[4]),
+                    optionals: tmp[5],
+                    current: line.includes('current') ? true : false,
+                    preferred: line.includes('preferred') ? true : false,
+                    dimensions: dimensions
+                };
+                result[last_connection].modes.push(r);
+                last_mode++;
+            } else if ((tmp = type.dimension_horizontal.exec(line))) {
+                var dimension_h = {
+                    width: tmp[1],
+                    start: tmp[2],
+                    end: tmp[3],
+                    total: tmp[4],
+                    skew: tmp[5],
+                    clock: parseFloat(tmp[6])
+                };
+                result[last_connection].modes[last_mode - 1].dimensions.horizontal = dimension_h;
+
+            } else if ((tmp = type.dimension_vertical.exec(line))) {
+                var dimension_v = {
+                    width: tmp[1],
+                    start: tmp[2],
+                    end: tmp[3],
+                    total: tmp[4],
+                    clock: parseFloat(tmp[5])
+
+                };
+                result[last_connection].modes[last_mode - 1].dimensions.vertical = dimension_v;
             }
-            if (tmp[4] && tmp[5]) {
-                result[tmp[1]].left = parseInt(tmp[4]);
-                result[tmp[1]].top = parseInt(tmp[5]);
-            }
-            last_connection = tmp[1];
-
-        } else if ((tmp = type.disconnected.exec(line))) {
-            result[tmp[1]] = {
-                connected: false,
-                modes: [],
-                index: index++
-            };
-            last_connection = tmp[1];
-        } else if ((tmp = type.mode.exec(line))) {
-            var dimensions = {
-                vertical: null,
-                horizontal: null
-            };
-            var r = {
-                width: tmp[1],
-                height: tmp[2],
-                rate: parseFloat(tmp[4]),
-                optionals: tmp[5],
-                current: tmp[6] ? true : false,
-                preferred: tmp[7] ? true : false,
-                dimensions: dimensions
-            };
-            result[last_connection].modes.push(r);
-            last_mode++;
-            if (tmp[4] === '+') result[last_connection]['native'] = r;
-            if (tmp[5] === '*') result[last_connection].current = r;
-        } else if ((tmp = type.dimension_horizontal.exec(line))) {
-            var dimension_h = {
-                width: tmp[3],
-                start: tmp[5],
-                end: tmp[7],
-                total: tmp[9],
-            };
-            result[last_connection].modes[last_mode - 1].dimensions.horizontal = dimension_h;
-
-        } else if ((tmp = type.dimension_vertical.exec(line))) {
-            var dimension_v = {
-                width: tmp[3],
-                start: tmp[5],
-                end: tmp[7],
-                total: tmp[9],
-            };
-            result[last_connection].modes[last_mode - 1].dimensions.vertical = dimension_v;
-        }
-    });
+        });
     return result;
 };

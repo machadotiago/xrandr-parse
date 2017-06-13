@@ -64,9 +64,9 @@ and the parsed result is:
 {
   "HDMI-1": {
     "connected": true,
-    "orientation": "right",
-    "modes": [
-      {
+    "orientation": "normal",
+    "modes": [{
+        "name": "1920x1080",
         "width": "1920",
         "height": "1080",
         "rate": 148.5,
@@ -74,49 +74,29 @@ and the parsed result is:
         "current": true,
         "preferred": true,
         "dimensions": {
-          "vertical": {
-            "width": "1080",
-            "start": "1084",
-            "end": "1089",
-            "total": "1125"
-          },
-          "horizontal": {
-            "width": "1920",
-            "start": "2008",
-            "end": "2052",
-            "total": "2200"
-          }
+            "vertical": {
+                "width": "1080",
+                "start": "1084",
+                "end": "1089",
+                "total": "1125",
+                "clock": 60
+            },
+            "horizontal": {
+                "width": "1920",
+                "start": "2008",
+                "end": "2052",
+                "total": "2200",
+                "skew": "0",
+                "clock": 67.5
+            }
         }
-      },
-      {
-        "width": "1920",
-        "height": "1080",
-        "rate": 148.5,
-        "optionals": "+HSync ",
-        "current": true,
-        "preferred": false,
-        "dimensions": {
-          "vertical": {
-            "width": "1080",
-            "start": "1084",
-            "end": "1089",
-            "total": "1125"
-          },
-          "horizontal": {
-            "width": "1920",
-            "start": "2448",
-            "end": "2492",
-            "total": "2640"
-          }
-        }
-      },
-    ],
+    }],
     "index": 0,
-    "width": 1080,
-    "height": 1920,
-    "left": 1080,
-    "top": 1920
-  }
+    "width": 1920,
+    "height": 1080,
+    "left": 0,
+    "top": 0
+   }
 }
 
 ```
